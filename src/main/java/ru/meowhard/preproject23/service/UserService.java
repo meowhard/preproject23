@@ -1,12 +1,9 @@
 package ru.meowhard.preproject23.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import ru.meowhard.preproject23.repository.UserRepository;
+import ru.meowhard.preproject23.model.User;
 
-@Service
-public class UserService {
+import java.util.List;
 
-    @Autowired
-    private UserRepository userRepository;
+public interface UserService {
+    List<User> getAllUsers();
 }
