@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ru.meowhard</groupId>
-	<artifactId>preproject</artifactId>
+	<artifactId>preproject23</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>preproject23</name>
 	<description>preproject task 2.3</description>
