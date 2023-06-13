@@ -4,7 +4,6 @@ import javax.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.List;
-import java.util.Set;
 
 // Этот класс реализует интерфейс GrantedAuthority, в котором необходимо переопределить только один метод getAuthority() (возвращает имя роли).
 // Имя роли должно соответствовать шаблону: «ROLE_ИМЯ», например, ROLE_USER.
