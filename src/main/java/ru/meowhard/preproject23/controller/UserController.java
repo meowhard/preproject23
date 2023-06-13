@@ -1,19 +1,21 @@
 package ru.meowhard.preproject23.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.meowhard.preproject23.model.User;
-import ru.meowhard.preproject23.service.UserService;
+import ru.meowhard.preproject23.service.UserDetailsServiceImpl;
 
 @Controller
 @RequestMapping("")
 public class UserController {
 
-    private UserService userService;
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserController(UserDetailsServiceImpl userService) {
+        this.userDetailsService = userService;
     }
 
     @GetMapping(value = "/")
@@ -31,45 +33,45 @@ public class UserController {
         return "user";
     }
 
-    @GetMapping("/users")
+    @GetMapping("/admin")
     public String listUsers(Model model) {
-        model.addAttribute("users", userService.getAllUsers());
-        return "users";
+        model.addAttribute("users", userDetailsService.getAllUsers());
+        return "admin";
     }
 
-    @GetMapping("/users/new")
+    @GetMapping("/admin/new")
     public String createUserForm(Model model) {
         User user = new User();
         model.addAttribute("user", user);
         return "create_user";
     }
 
-    @PostMapping("/users")
+    @PostMapping("/admin")
     public String saveUser(@ModelAttribute("user") User user) {
-        userService.saveUser(user);
-        return "redirect:/users";
+        userDetailsService.saveUser(user);
+        return "redirect:/admin";
     }
 
-    @GetMapping("/users/edit/{id}")
+    @GetMapping("/admin/edit/{id}")
     public String editUserForm(@PathVariable Long id, Model model) {
-        model.addAttribute("user", userService.getUserById(id));
+        model.addAttribute("user", userDetailsService.getUserById(id));
         return "edit_user";
     }
 
-    @PostMapping("/users/{id}")
+    @PostMapping("/admin/{id}")
     public String updateUser(@PathVariable Long id, @ModelAttribute("user") User user, Model model) {
-        User existingUser = userService.getUserById(id);
+        User existingUser = userDetailsService.getUserById(id);
         existingUser.setId(id);
         existingUser.setName(user.getName());
         existingUser.setAge(user.getAge());
         existingUser.setEmail(user.getEmail());
-        userService.updateUser(existingUser);
-        return "redirect:/users";
+        userDetailsService.updateUser(existingUser);
+        return "redirect:/admin";
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/admin/{id}")
     public String deleteUser(@PathVariable Long id) {
-        userService.deleteUserById(id);
-        return "redirect:/users";
+        userDetailsService.deleteUserById(id);
+        return "redirect:/admin";
     }
 }

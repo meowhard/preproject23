@@ -1,11 +1,12 @@
 package ru.meowhard.preproject23.model;
 
-import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -16,7 +17,7 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(name = "Name", nullable = false)
-    private String name;
+    private String username;
 
     @Column(name = "Password")
     private String password;
@@ -34,7 +35,7 @@ public class User implements UserDetails {
     }
 
     public User(String name, int age, String email) {
-        this.name = name;
+        this.username = name;
         this.age = age;
         this.email = email;
     }
@@ -48,11 +49,11 @@ public class User implements UserDetails {
     }
 
     public String getName() {
-        return name;
+        return username;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.username = name;
     }
 
     public int getAge() {
@@ -95,7 +96,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return name;
+        return username;
     }
 
     @Override

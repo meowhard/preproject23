@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ru.meowhard.preproject23.model.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findUserByUsername(String username);
+    User findUserByUsername(String name);
 }

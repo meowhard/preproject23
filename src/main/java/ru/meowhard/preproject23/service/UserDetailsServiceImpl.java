@@ -4,13 +4,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import ru.meowhard.preproject23.model.Role;
 import ru.meowhard.preproject23.model.User;
 import ru.meowhard.preproject23.repository.UserRepository;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
+
     private final UserRepository userRepository;
 
     public UserDetailsServiceImpl(UserRepository userRepository) {
@@ -30,6 +33,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     public User saveUser(User user) {
+
         //TODO: подумать про роли
         return userRepository.save(user);
     }
