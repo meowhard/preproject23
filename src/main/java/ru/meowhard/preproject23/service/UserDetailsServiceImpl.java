@@ -30,14 +30,24 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userRepository.findAll();
     }
 
-    public User saveUser(User user) {
+    public boolean saveUser(User user) {
+        User userFromDB = userRepository.findUserByUsername(user.getUsername());
+
+        if(userFromDB != null) {
+            return false;
+        }
+        userRepository.save(user);
 
         //TODO: подумать про роли
-        return userRepository.save(user);
+        return true;
     }
 
     public User getUserById(Long id) {
         return userRepository.findById(id).get();
+    }
+
+    public User getUserByName(String name) {
+        return userRepository.findUserByUsername(name);
     }
 
     public User updateUser(User user) {

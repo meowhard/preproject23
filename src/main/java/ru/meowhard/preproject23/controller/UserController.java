@@ -3,9 +3,12 @@ package ru.meowhard.preproject23.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.meowhard.preproject23.model.User;
 import ru.meowhard.preproject23.service.UserDetailsServiceImpl;
+
+import java.security.Principal;
 
 @Controller
 @RequestMapping("")
@@ -29,7 +32,8 @@ public class UserController {
     }
 
     @GetMapping(value = "/user")
-    public String getUserPage() {
+    public String getUserPage(Model model, Principal principal) {
+        model.addAttribute("user", userDetailsService.getUserByName(principal.getName()));
         return "user";
     }
 
@@ -47,8 +51,12 @@ public class UserController {
     }
 
     @PostMapping("/admin")
-    public String saveUser(@ModelAttribute("user") User user) {
-        userDetailsService.saveUser(user);
+    public String saveUser(@ModelAttribute("user") User user, Model model) {
+
+        if(!userDetailsService.saveUser(user)) {
+            model.addAttribute("usernameError", "Это имя пользователя недоступно");
+            return "create_user";
+        }
         return "redirect:/admin";
     }
 

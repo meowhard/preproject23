@@ -9,6 +9,15 @@
         crossorigin="anonymous">
 </head>
 <body>
+
+<div class="container-fluid">
+  <a class="navbar-brand"></a>
+  <form class="d-flex justify-content-end" role="search">
+    <a th:href="@{/logout}"
+       class="btn btn-outline-light" type="submit">Logout</a>
+  </form>
+</div>
+
 <div class = "container">
   <div class = "row">
     <div class = "col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
@@ -18,22 +27,23 @@
           <div class="form-group">
             <label> User Name </label>
             <input
-            type="text"
-            name="Name"
-            th:field="*{name}"
-            class="form-control"
-            placeholder="Enter User Name"
+              type="text"
+              name="Name"
+              th:field="*{name}"
+              class="form-control"
+              placeholder="Enter User Name"
             />
+            <span th:text=""></span>
           </div>
 
           <div class="form-group">
             <label> User Password </label>
             <input
-                    type="text"
-                    name="Password"
-                    th:field="*{password}"
-                    class="form-control"
-                    placeholder="Enter User Password"
+              type="text"
+              name="Password"
+              th:field="*{password}"
+              class="form-control"
+              placeholder="Enter User Password"
             />
           </div>
 
