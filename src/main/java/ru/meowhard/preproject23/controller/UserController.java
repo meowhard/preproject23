@@ -3,7 +3,6 @@ package ru.meowhard.preproject23.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.meowhard.preproject23.model.User;
 import ru.meowhard.preproject23.service.UserDetailsServiceImpl;
@@ -53,8 +52,11 @@ public class UserController {
     @PostMapping("/admin")
     public String saveUser(@ModelAttribute("user") User user, Model model) {
 
+        String err;
+
         if(!userDetailsService.saveUser(user)) {
-            model.addAttribute("usernameError", "Это имя пользователя недоступно");
+            err = "Это имя пользователя уже занято";
+            model.addAttribute("usernameErr", err);
             return "create_user";
         }
         return "redirect:/admin";
