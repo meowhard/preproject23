@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.meowhard.preproject23.model.Role;
 import ru.meowhard.preproject23.model.User;
 import ru.meowhard.preproject23.service.UserDetailsServiceImpl;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequestMapping("")
@@ -51,12 +53,9 @@ public class UserController {
 
     @PostMapping("/admin")
     public String saveUser(@ModelAttribute("user") User user, Model model) {
-
-        String err;
-
+        user.setRoles(List.of(new Role(2L, "ROLE_USER")));
         if(!userDetailsService.saveUser(user)) {
-            err = "Это имя пользователя уже занято";
-            model.addAttribute("usernameErr", err);
+            model.addAttribute("usernameErr", "Это имя пользователя уже занято");
             return "create_user";
         }
         return "redirect:/admin";
