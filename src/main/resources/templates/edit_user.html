@@ -35,6 +35,10 @@
             />
           </div>
 
+          <div th:if="${usernameErr}">
+            <div class="alert alert-danger" th:text="${usernameErr}"></div>
+          </div>
+
           <div class="form-group">
             <label> User Age </label>
             <input

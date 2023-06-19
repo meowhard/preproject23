@@ -52,11 +52,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userRepository.findUserByUsername(name);
     }
 
-    public User updateUser(User user) {
-        System.out.println(user.getId());
-        System.out.println(user.getName());
-        System.out.println(userRepository.getById(user.getId()));
-        return userRepository.save(user);
+    public boolean updateUser(User user) {
+        User userFromDB = userRepository.findUserByUsername(user.getUsername());
+
+        if(userFromDB != null) {
+            return false;
+        }
+
+        userRepository.save(user);
+        return true;
     }
 
     public void deleteUserById(Long id) {
