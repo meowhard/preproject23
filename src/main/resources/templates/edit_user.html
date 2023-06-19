@@ -23,7 +23,7 @@
     <div class = "col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
       <h1 class="text-center"> Update User </h1>
       <div class="card-body">
-        <form th:action="@{/admin}" th:object="${user}" method="POST">
+        <form th:action="@{/admin/edit/{id}(id=${user.getId()})}" th:object="${user}" th:method="POST">
           <div class="form-group">
             <label> User Name </label>
             <input

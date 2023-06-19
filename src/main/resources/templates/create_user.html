@@ -23,7 +23,7 @@
     <div class = "col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
       <h1 class="text-center"> Create New User </h1>
       <span class="card-body">
-        <form th:action="@{/admin}" th:object="${user}" method="POST">
+        <form th:action="@{/admin}" th:object="${user}" th:method="POST">
           <div class="form-group">
             <label> User Name </label>
             <input

@@ -1,5 +1,6 @@
 package ru.meowhard.preproject23.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,11 +13,13 @@ import java.util.List;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-    public UserDetailsServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+
+//    public UserDetailsServiceImpl(UserRepository userRepository) {
+//        this.userRepository = userRepository;
+//    }
 
     // «Пользователь» – это просто Object. В большинстве случаев он может быть
     //  приведен к классу UserDetails.
@@ -36,9 +39,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if(userFromDB != null) {
             return false;
         }
-        userRepository.save(user);
 
-        //TODO: подумать про роли
+        userRepository.save(user);
         return true;
     }
 
@@ -51,6 +53,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     public User updateUser(User user) {
+        System.out.println(user.getId());
+        System.out.println(user.getName());
+        System.out.println(userRepository.getById(user.getId()));
         return userRepository.save(user);
     }
 

@@ -14,8 +14,8 @@ public class Preproject23Application implements CommandLineRunner {
 		SpringApplication.run(Preproject23Application.class, args);
 	}
 
-	@Autowired
-	private UserRepository userRepository;
+//	@Autowired
+//	private UserRepository userRepository;
 
 	@Override
 	public void run(String... args) throws Exception {
