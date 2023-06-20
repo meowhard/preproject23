@@ -16,10 +16,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
-
-//    public UserDetailsServiceImpl(UserRepository userRepository) {
-//        this.userRepository = userRepository;
-//    }
+    public UserDetailsServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     // «Пользователь» – это просто Object. В большинстве случаев он может быть
     //  приведен к классу UserDetails.
@@ -52,15 +51,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userRepository.findUserByUsername(name);
     }
 
-    public boolean updateUser(User user) {
-        User userFromDB = userRepository.findUserByUsername(user.getUsername());
-
-        if(userFromDB != null) {
-            return false;
-        }
-
-        userRepository.save(user);
-        return true;
+    public void updateUser(User user, User existingUser) {
+        existingUser.setName(user.getName());
+        existingUser.setAge(user.getAge());
+        existingUser.setEmail(user.getEmail());
+        userRepository.save(existingUser);
     }
 
     public void deleteUserById(Long id) {

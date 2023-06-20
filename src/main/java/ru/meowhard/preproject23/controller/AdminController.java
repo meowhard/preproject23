@@ -1,6 +1,7 @@
 package ru.meowhard.preproject23.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -53,14 +54,7 @@ public class AdminController {
     @PostMapping("/edit/{id}")
     public String updateUser(@PathVariable Long id, @ModelAttribute("user") User user, Model model) {
         User existingUser = userDetailsService.getUserById(id);
-        existingUser.setName(user.getName());
-        existingUser.setAge(user.getAge());
-        existingUser.setEmail(user.getEmail());
-
-        if(!userDetailsService.updateUser(existingUser)) {
-            model.addAttribute("usernameErr", "Это имя пользователя уже занято");
-            return "edit_user";
-        }
+        userDetailsService.updateUser(user, existingUser);
         return "redirect:/admin";
     }
 
