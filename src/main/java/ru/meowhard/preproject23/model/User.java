@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -84,6 +85,10 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+    public String getRolesToString() {
+        return this.roles.stream().map(String::valueOf).collect(Collectors.joining(", "));
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
@@ -117,10 +122,5 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    @Override
-    public String toString() {
-        return roles.toString();
     }
 }

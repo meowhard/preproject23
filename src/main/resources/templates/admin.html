@@ -48,7 +48,7 @@
                     <td th:text = "${user.name}"></td>
                     <td th:text = "${user.age}"></td>
                     <td th:text = "${user.email}"></td>
-                    <td th:text = "${user.getRoles().toString()}"></td>
+                    <td th:text = "${user.getRolesToString()}"></td>
                     <td>
                         <a th:href="@{/admin/edit/{id}(id=${user.id})}"
                         class="btn btn-success d-grid"> Edit </a>
