@@ -53,6 +53,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public void updateUser(User user, User existingUser) {
         existingUser.setName(user.getName());
+        existingUser.setPassword(user.getPassword());
         existingUser.setAge(user.getAge());
         existingUser.setEmail(user.getEmail());
         userRepository.save(existingUser);
