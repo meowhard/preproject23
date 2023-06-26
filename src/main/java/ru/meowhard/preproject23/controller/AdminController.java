@@ -9,6 +9,7 @@ import ru.meowhard.preproject23.model.Role;
 import ru.meowhard.preproject23.model.User;
 import ru.meowhard.preproject23.service.UserDetailsServiceImpl;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -23,8 +24,9 @@ public class AdminController {
     }
 
     @GetMapping
-    public String showUserList(Model model) {
+    public String showUserList(Model model, Principal principal) {
         model.addAttribute("users", userDetailsService.getAllUsers());
+        model.addAttribute("user", userDetailsService.getUserByName(principal.getName()));
         return "admin";
     }
 

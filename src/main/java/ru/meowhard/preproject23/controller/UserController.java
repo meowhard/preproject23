@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import ru.meowhard.preproject23.model.User;
 import ru.meowhard.preproject23.service.UserDetailsServiceImpl;
 
 import java.security.Principal;
@@ -21,8 +23,13 @@ public class UserController {
         this.userDetailsService = userService;
     }
 
+//    @GetMapping
+//    public User getUser(Principal principal) {
+//        return userDetailsService.getUserByName(principal.getName());
+//    }
+
     @GetMapping
-    public String getUserPage(Model model, Principal principal) {
+    public String getUser(Model model, Principal principal) {
         model.addAttribute("user", userDetailsService.getUserByName(principal.getName()));
         return "user";
     }

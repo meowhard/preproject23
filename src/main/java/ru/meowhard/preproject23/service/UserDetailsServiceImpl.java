@@ -56,6 +56,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         existingUser.setPassword(user.getPassword());
         existingUser.setAge(user.getAge());
         existingUser.setEmail(user.getEmail());
+        existingUser.setRoles(user.getRoles());
         userRepository.save(existingUser);
     }
 

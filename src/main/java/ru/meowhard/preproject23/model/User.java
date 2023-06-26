@@ -29,8 +29,8 @@ public class User implements UserDetails {
     @Column(name = "Email")
     private String email;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Role> roles;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    List<Role> roles;
 
     public User() {
     }
