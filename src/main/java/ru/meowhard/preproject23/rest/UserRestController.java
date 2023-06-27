@@ -15,7 +15,7 @@ public class UserRestController {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
-
+    @GetMapping("/get_user")
     public UserDTO getUserData(Principal principal) {
         User user = userDetailsService.getUserByName(principal.getName());
         return new UserDTO(user);

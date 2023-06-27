@@ -14,6 +14,28 @@
             crossorigin="anonymous"></script>
 </head>
 
+<script>
+
+    $(document).ready(function () {
+
+        $.get('/get_user', function (user_data) {
+            console.log(user_data);
+
+            let table = "<tr>" +
+                "<td>" + user_data.id + "</td>" +
+                "<td>" + user_data.username + "</td>" +
+                "<td>"  + user_data.age + "</td>" +
+                "<td>" + user_data.email + "</td>" +
+                "<td>" + user_data.roles + "</td>" +
+                "</tr>";
+
+            $("#user_table").html(table)
+        });
+
+    });
+
+</script>
+
 <body>
     <nav class="navbar bg-dark">
         <div class="container-fluid">
@@ -33,18 +55,16 @@
         <table class = "table table-striped table-bordered">
             <thead class = "table-dark">
                 <tr>
+                    <th> ID </th>
                     <th> Name </th>
                     <th> Age </th>
                     <th> Email </th>
+                    <th> Role </th>
                 </tr>
             </thead>
 
-            <tbody>
-            <tr>
-                <td th:text = "${user.name}"></td>
-                <td th:text = "${user.age}"></td>
-                <td th:text = "${user.email}"></td>
-            </tr>
+            <tbody id="user_table">
+
             </tbody>
         </table>
     </div>

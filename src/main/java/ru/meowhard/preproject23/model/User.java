@@ -30,7 +30,7 @@ public class User implements UserDetails {
     private String email;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    List<Role> roles;
+    private List<Role> roles;
 
     public User() {
     }
