@@ -22,63 +22,57 @@
   <div class = "row">
     <div class = "col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
       <h1 class="text-center"> Create New User </h1>
-      <span class="card-body">
-        <form th:action="@{/admin}" th:object="${user}" th:method="POST">
-          <div class="form-group">
-            <label> User Name </label>
-            <input
-              type="text"
-              name="Name"
-              th:field="*{name}"
-              class="form-control"
-              placeholder="Enter User Name"
+      <span class="card-body"></span>
+      <form th:action="@{/admin}" th:object="${user}" th:method="POST">
+        <div class="form-group">
+          <label> User Name </label>
+          <input type="text" name="Name" th:field="*{name}" class="form-control" placeholder="Enter User Name"
             />
-          </div>
+        </div>
 
-          <div th:if="${usernameErr}">
-            <div class="alert alert-danger" th:text="${usernameErr}"></div>
-          </div>
+        <div th:if="${usernameErr}">
+          <div class="alert alert-danger" th:text="${usernameErr}"></div>
+        </div>
 
-          <div class="form-group">
-            <label> User Password </label>
-            <input
-              type="text"
-              name="Password"
-              th:field="*{password}"
-              class="form-control"
-              placeholder="Enter User Password"
-            />
-          </div>
+        <div class="form-group">
+          <label> User Password </label>
+          <input
+            type="text"
+            name="Password"
+            th:field="*{password}"
+            class="form-control"
+            placeholder="Enter User Password"
+          />
+        </div>
 
-          <div class="form-group">
-            <label> User Age </label>
-            <input
-                    type="text"
-                    name="Age"
-                    th:field="*{age}"
-                    class="form-control"
-                    placeholder="Enter User Age"
-            />
-          </div>
+        <div class="form-group">
+          <label> User Age </label>
+          <input
+                  type="text"
+                  name="Age"
+                  th:field="*{age}"
+                  class="form-control"
+                  placeholder="Enter User Age"
+          />
+        </div>
 
-          <div class="form-group">
-            <label> User Email </label>
-            <input
-                    type="text"
-                    name="Email"
-                    th:field="*{email}"
-                    class="form-control"
-                    placeholder="Enter User Email"
-            />
-          </div>
+        <div class="form-group">
+          <label> User Email </label>
+          <input
+                  type="text"
+                  name="Email"
+                  th:field="*{email}"
+                  class="form-control"
+                  placeholder="Enter User Email"
+          />
+        </div>
 
-          <div class="box-footer">
-            <button type="submit" class="btn btn-primary">
-              Submit
-            </button>
-          </div>
-        </form>
-      </div>
+        <div class="box-footer">
+          <button type="submit" class="btn btn-primary">
+            Submit
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
