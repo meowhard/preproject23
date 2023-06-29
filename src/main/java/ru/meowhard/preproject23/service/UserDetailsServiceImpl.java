@@ -5,9 +5,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import ru.meowhard.preproject23.dto.UserDTO;
 import ru.meowhard.preproject23.model.User;
 import ru.meowhard.preproject23.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -62,5 +64,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public void deleteUserById(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public List<UserDTO> getUserDTOlist(List<User> userList) {
+        List<UserDTO> userDTOList = new ArrayList<>();
+        for(User user:userList) {
+            UserDTO userDTO = new UserDTO();
+            userDTO.setId(user.getId());
+            userDTO.setUsername(user.getUsername());
+            userDTO.setPassword(user.getPassword());
+            userDTO.setAge(user.getAge());
+            userDTO.setEmail(user.getEmail());
+            userDTO.setRoles(user.getRolesToString());
+            userDTOList.add(userDTO);
+        }
+        return userDTOList;
     }
 }
