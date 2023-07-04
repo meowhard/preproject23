@@ -7,99 +7,8 @@
               rel="stylesheet"
               integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
               crossorigin="anonymous">
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"></script>
     </head>
-
-    <script>
-        function getUser() {
-            $.get('/get_authorized_user', function (user_data) {
-                console.log(user_data);
-
-                let table = "<tr>" +
-                    "<td>" + user_data.id + "</td>" +
-                    "<td>" + user_data.username + "</td>" +
-                    "<td>" + user_data.age + "</td>" +
-                    "<td>" + user_data.email + "</td>" +
-                    "<td>" + user_data.roles + "</td>" +
-                    "</tr>";
-
-                $("#user_table").html(table);
-            });
-        }
-
-        function getAllUsers() {
-            $.get('/get_all_users', function (users_data) {
-                console.log(users_data);
-
-                let table = "";
-
-                for (i = 0; i < users_data.length; i++) {
-                    table = table + "<tr>" +
-                        "<td>" + users_data[i].id + "</td>" +
-                        "<td>" + users_data[i].username + "</td>" +
-                        "<td>"  + users_data[i].age + "</td>" +
-                        "<td>" + users_data[i].email + "</td>" +
-                        "<td>" + users_data[i].roles + "</td>" +
-                        "<td>" + "</td>" +
-                        "<td>" + "</td>" +
-                        "</tr>";
-                }
-
-                $('#all_users').html(table);
-            });
-        }
-
-        $(document).ready(function () {
-
-            getAllUsers();
-
-            $('#addUserButton').click(function () {
-
-                console.log("addUserButton нажата");
-
-                $('#usersTablePage').addClass('d-none');
-                $('#addUserPage').removeClass('d-none');
-
-                $('#usersTableButton').removeClass('active');
-                $('#addUserButton').addClass('active');
-
-
-            });
-
-            $('#usersTableButton').click(function () {
-
-                console.log("usersTableButton нажата");
-
-                $('#addUserPage').addClass('d-none');
-                $('#usersTablePage').removeClass('d-none');
-
-                $('#addUserButton').removeClass('active');
-                $('#usersTableButton').addClass('active');
-            });
-
-            $('#userPanelButton').click(function () {
-
-                console.log("userPanelButton нажата");
-
-                $('#adminPanel').addClass('d-none');
-                $('#userPanel').removeClass('d-none');
-
-                $('#userPanelButton').removeClass('btn-link').addClass('btn-primary');
-                $('#adminPanelButton').removeClass('btn-primary').addClass('btn-link');
-            });
-
-            $('#adminPanelButton').click(function () {
-
-                console.log("userPanelButton нажата");
-
-                $('#userPanel').addClass('d-none');
-                $('#adminPanel').removeClass('d-none');
-
-                $('#adminPanelButton').removeClass('btn-link').addClass('btn-primary');
-                $('#userPanelButton').removeClass('btn-primary').addClass('btn-link');
-            });
-        });
-    </script>
 
     <body class="bg-light">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -120,6 +29,56 @@
                 </div>
             </div>
         </nav>
+<!--Modal Edit-->
+        <div class="modal" id="modalEdit" tabindex="-1" aria-labelledby="modalEdit" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit user</h5>
+                        <button id="editClose" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group mt-3 mx-auto" style="width: 360px">
+                                <h6 class="mt-2 mx-2 text-md-center"> User Name </h6>
+                                <input id="editName" type="text" name="name" class="form-control" placeholder="Логин"/>
+                            </div>
+
+                            <div class="form-group mt-3 mx-auto" style="width: 360px">
+                                <h6 class="mt-2 mx-2 text-md-center"> User Password </h6>
+                                <input id="editPassword" type="text" name="password" class="form-control" placeholder="Пароль"/>
+                            </div>
+
+                            <div class="form-group mt-3 mx-auto" style="width: 360px">
+                                <h6 class="mt-2 mx-2 text-md-center"> User Age </h6>
+                                <input id="editAge" type="text" name="age" class="form-control" placeholder="Возраст"/>
+                            </div>
+
+                            <div class="form-group mt-3 mx-auto" style="width: 360px">
+                                <h6 class="mt-2 mx-2 text-md-center"> User Email </h6>
+                                <input id="editEmail" type="email" name="email" class="form-control" placeholder="E-mail"/>
+                            </div>
+
+                            <div class="form-group mt-3 mx-auto" style="width: 360px">
+                                <h6 class="mt-2 mx-2 text-md-center"> User Roles </h6>
+                                <select id="editRoles" class="form-select" multiple aria-label="roles">
+                                    <option selected>ROLE_USER</option>
+                                    <option>ROLE_ADMIN</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group mt-3 mb-3 mx-auto" style="width: 240px">
+                                <button id="edit" type="button" name="button" class="btn btn-primary" style="width: 240px">Add</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Edit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="row vh-100">
             <div class="col-md-2 bg-white">
@@ -165,15 +124,10 @@
                 <div id="addUserPage" class="tab-content d-none">
                     <h5 class="mt-2 mx-2"> Add new user </h5>
                     <div class="card w-100">
-                        <form th:action="@{/admin}" th:object="${user}" th:method="POST">
+                        <form>
                             <div class="form-group mt-3 mx-auto" style="width: 360px">
                                 <h6 class="mt-2 mx-2 text-md-center"> User Name </h6>
-                                <input
-                                        type="text"
-                                        name="Name" th:field="*{name}"
-                                        class="form-control"
-                                        placeholder="Enter User Name"
-                                />
+                                <input id="name" type="text" name="name" class="form-control" placeholder="Логин"/>
                             </div>
 
                             <div th:if="${usernameErr}">
@@ -182,41 +136,29 @@
 
                             <div class="form-group mt-3 mx-auto" style="width: 360px">
                                 <h6 class="mt-2 mx-2 text-md-center"> User Password </h6>
-                                <input
-                                        type="text"
-                                        name="Password"
-                                        th:field="*{password}"
-                                        class="form-control"
-                                        placeholder="Enter User Password"
-                                />
+                                <input id="password" type="text" name="password" class="form-control" placeholder="Пароль"/>
                             </div>
 
                             <div class="form-group mt-3 mx-auto" style="width: 360px">
                                 <h6 class="mt-2 mx-2 text-md-center"> User Age </h6>
-                                <input
-                                        type="text"
-                                        name="Age"
-                                        th:field="*{age}"
-                                        class="form-control"
-                                        placeholder="Enter User Age"
-                                />
+                                <input id="age" type="text" name="age" class="form-control" placeholder="Возраст"/>
                             </div>
 
                             <div class="form-group mt-3 mx-auto" style="width: 360px">
                                 <h6 class="mt-2 mx-2 text-md-center"> User Email </h6>
-                                <input
-                                        type="text"
-                                        name="Email"
-                                        th:field="*{email}"
-                                        class="form-control"
-                                        placeholder="Enter User Email"
-                                />
+                                <input id="email" type="email" name="email" class="form-control" placeholder="E-mail"/>
+                            </div>
+
+                            <div class="form-group mt-3 mx-auto" style="width: 360px">
+                                <h6 class="mt-2 mx-2 text-md-center"> User Roles </h6>
+                                <select id="roles" class="form-select" multiple aria-label="roles">
+                                    <option selected>ROLE_USER</option>
+                                    <option>ROLE_ADMIN</option>
+                                </select>
                             </div>
 
                             <div class="form-group mt-3 mb-3 mx-auto" style="width: 240px">
-                                <button type="submit" class="btn btn-primary" style="width: 240px">
-                                    Submit
-                                </button>
+                                <button id="addButton" type="button" name="button" class="btn btn-primary" style="width: 240px">Add</button>
                             </div>
                         </form>
                     </div>
@@ -245,5 +187,8 @@
                 </table>
             </div>
         </div>
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+        <script src="/js/scripts.js"></script>
     </body>
 </html>

@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.meowhard.preproject23.dto.UserDTO;
+import ru.meowhard.preproject23.mapper.UserMapper;
 import ru.meowhard.preproject23.model.User;
 import ru.meowhard.preproject23.repository.UserRepository;
 
@@ -17,6 +18,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserMapper userMapper;
 
     public UserDetailsServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -45,6 +49,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return true;
     }
 
+    public boolean saveUser(UserDTO userDTO) {
+        User user = userMapper.mapToUser(userDTO);
+        return saveUser(user);
+    }
+
     public User getUserById(Long id) {
         return userRepository.findById(id).get();
     }
@@ -54,7 +63,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     public void updateUser(User user, User existingUser) {
-        existingUser.setName(user.getName());
+        existingUser.setUsername(user.getUsername());
         existingUser.setPassword(user.getPassword());
         existingUser.setAge(user.getAge());
         existingUser.setEmail(user.getEmail());

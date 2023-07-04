@@ -1,6 +1,11 @@
 package ru.meowhard.preproject23.model;
 
 import javax.persistence.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.List;
@@ -9,6 +14,10 @@ import java.util.List;
 // Имя роли должно соответствовать шаблону: «ROLE_ИМЯ», например, ROLE_USER.
 @Entity
 @Table(name = "roles")
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class Role implements GrantedAuthority {
 
     @Id
@@ -28,32 +37,6 @@ public class Role implements GrantedAuthority {
     public Role(Long id, String role) {
         this.id = id;
         this.role = role;
-    }
-
-    public Role() {}
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
     }
 
     @Override
