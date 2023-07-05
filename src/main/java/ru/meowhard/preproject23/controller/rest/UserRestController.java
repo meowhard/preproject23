@@ -1,4 +1,4 @@
-package ru.meowhard.preproject23.rest;
+package ru.meowhard.preproject23.controller.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,9 +42,10 @@ public class UserRestController {
         return new UserDTO(user);
     }
 
-    @PostMapping("/edit_user")
-    public void editUser(@RequestBody UserDTO userDTO) {
-        User existingUser = userDetailsService.getUserByName(userDTO.getUsername());
+    @PostMapping("/edit_user/{id}")
+    public void editUser(@RequestBody UserDTO userDTO, @PathVariable Long id) {
+        System.out.println(userDTO.toString());
+        User existingUser = userDetailsService.getUserById(id);
         userDetailsService.updateUser(userDTO, existingUser);
     }
 

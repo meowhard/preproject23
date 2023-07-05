@@ -18,15 +18,15 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" th:text="${user.email}"></a>
+                            <a id="authUserEmail" class="nav-link active"></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link disabled" tabindex="-1" aria-disabled="true" th:text="${user.getRolesToString()}"></a>
+                            <a id="authUserRoles" class="nav-link disabled" tabindex="-1" aria-disabled="true"></a>
                         </li>
                     </ul>
                     <form class="d-grid gap-2 d-md-flex justify-content-md-end" role="search">
                         <a th:href="@{/logout}"
-                           class="btn btn-outline-light" type="submit">Logout</a>
+                           id="logout" class="btn btn-outline-light" type="submit">Logout</a>
                     </form>
                 </div>
             </div>
@@ -238,7 +238,6 @@
                 </div>
 
                 <h5 class="mt-2 mx-2"> About user </h5>
-
                 <table class = "table table-striped table-bordered">
                     <thead class = "table-dark">
                         <tr>

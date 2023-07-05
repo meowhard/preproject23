@@ -26,9 +26,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
-    // «Пользователь» – это просто Object. В большинстве случаев он может быть
-    //  приведен к классу UserDetails.
-    // Для создания UserDetails используется интерфейс UserDetailsService, с единственным методом:
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         return userRepository.findUserByUsername(s);

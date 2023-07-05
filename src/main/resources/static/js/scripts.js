@@ -88,19 +88,32 @@ function deleteUser(id) {
     })
 }
 
+function getAuthUserEmailAndRoles() {
+    $.get('/get_authorized_user', function (user_data) {
+        $('#authUserEmail').html(user_data.email);
+        $('#authUserRoles').html(user_data.roles);
+    })
+}
+
+function closeEditModal() {
+    $('#modalEdit').modal({
+        show: false,
+        hide: true
+    })
+}
+
 $('#editButton').click(function () {
+    var id = $('#editId').val();
     var name = $('#editName').val();
     var password = $('#editPassword').val();
     var age = $('#editAge').val();
     var email = $('#editEmail').val();
     var roles = $('#editRoles').val().join(", ");
 
-    $('#modalEdit').modal({
-        show: false
-    })
+
 
     $.ajax({
-        url:'/edit_user',
+        url:'/edit_user/' + id,
         type: 'POST',
         cache: false,
         async: false,
@@ -116,8 +129,7 @@ $('#editButton').click(function () {
             alert(textStatus)
         }],
         success: [function () {
-
-
+            closeEditModal();
             getAllUsers();
         }]
     })
@@ -176,6 +188,7 @@ $('#addButton').click(function () {
 
 $(document).ready(function () {
 
+    getAuthUserEmailAndRoles();
     getAllUsers();
 
     $('#addUserButton').click(function () {
@@ -223,4 +236,6 @@ $(document).ready(function () {
         $('#adminPanelButton').removeClass('btn-link').addClass('btn-primary');
         $('#userPanelButton').removeClass('btn-primary').addClass('btn-link');
     });
+    
+
 });
