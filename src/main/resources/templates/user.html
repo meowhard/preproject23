@@ -7,29 +7,9 @@
           rel="stylesheet"
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
           crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js"></script>
 </head>
-
-<script>
-    $(document).ready(function () {
-        $.get('/get_authorized_user', function (user_data) {
-            console.log(user_data);
-
-            let table = "<tr>" +
-                "<td>" + user_data.id + "</td>" +
-                "<td>" + user_data.username + "</td>" +
-                "<td>"  + user_data.age + "</td>" +
-                "<td>" + user_data.email + "</td>" +
-                "<td>" + user_data.roles + "</td>" +
-                "</tr>";
-
-            $("#user_table").html(table);
-        });
-    });
-</script>
 
 <body class="bg-light">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -37,15 +17,15 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" th:text="${user.email}"></a>
+                        <a id="authUserEmail" class="nav-link active"></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link disabled" tabindex="-1" aria-disabled="true" th:text="${user.getRolesToString()}"></a>
+                        <a id="authUserRoles" class="nav-link disabled" tabindex="-1" aria-disabled="true"></a>
                     </li>
                 </ul>
                 <form class="d-grid gap-2 d-md-flex justify-content-md-end" role="search">
                     <a th:href="@{/logout}"
-                       class="btn btn-outline-light" type="submit">Logout</a>
+                       id="logout" class="btn btn-outline-light" type="submit">Logout</a>
                 </form>
             </div>
         </div>
@@ -79,6 +59,8 @@
         </div>
     </div>
 
-    <script src="/js/user.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+    <script src="/js/scripts.js"></script>
 
 </body>

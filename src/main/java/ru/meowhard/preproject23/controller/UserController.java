@@ -16,21 +16,8 @@ import java.security.Principal;
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
-
-    public UserController(UserDetailsServiceImpl userService) {
-        this.userDetailsService = userService;
-    }
-
-//    @GetMapping
-//    public User getUser(Principal principal) {
-//        return userDetailsService.getUserByName(principal.getName());
-//    }
-
     @GetMapping
-    public String getUser(Model model, Principal principal) {
-        model.addAttribute("user", userDetailsService.getUserByName(principal.getName()));
+    public String user(Model model, Principal principal) {
         return "user";
     }
 }

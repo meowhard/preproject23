@@ -34,14 +34,4 @@ public class UserDTO {
         this.email = user.getEmail();
         this.roles = user.getRolesToString();
     }
-
-    public List<Role> getStringRolesToList() {
-        List<Role> listOfRoles = new ArrayList<>();
-        List<String> stringListOfRoles = new ArrayList<>(Arrays.asList(roles.split(",")));
-        for (String stringListOfRole : stringListOfRoles) {
-            Role role = new Role(stringListOfRole);
-            listOfRoles.add(role);
-        }
-        return listOfRoles;
-    }
 }

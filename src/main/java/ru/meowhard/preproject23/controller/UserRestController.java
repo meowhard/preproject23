@@ -1,4 +1,4 @@
-package ru.meowhard.preproject23.controller.rest;
+package ru.meowhard.preproject23.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,42 +14,40 @@ import java.util.List;
 @RestController
 public class UserRestController {
 
-    private Long id;
-
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
-    @GetMapping("/get_authorized_user")
+    @GetMapping("/users/authorized")
     public UserDTO getUserData(Principal principal) {
         User user = userDetailsService.getUserByName(principal.getName());
         return new UserDTO(user);
     }
 
-    @GetMapping("/get_all_users")
+    @GetMapping("/users")
     public List<UserDTO> getAllUsers() {
         List<User> userList = userDetailsService.getAllUsers();
         return userDetailsService.getUserDTOlist(userList);
     }
 
-    @PostMapping("/save_user")
+    @PutMapping("/users")
     public void saveNewUser(@RequestBody UserDTO userDTO) {
         userDetailsService.saveUser(userDTO);
     }
 
-    @GetMapping("/get_user_by_id/{id}")
+    @GetMapping("/users/{id}")
     public UserDTO getUserById(@PathVariable Long id) {
         User user = userDetailsService.getUserById(id);
         return new UserDTO(user);
     }
 
-    @PostMapping("/edit_user/{id}")
+    @PostMapping("/users/{id}")
     public void editUser(@RequestBody UserDTO userDTO, @PathVariable Long id) {
         System.out.println(userDTO.toString());
         User existingUser = userDetailsService.getUserById(id);
         userDetailsService.updateUser(userDTO, existingUser);
     }
 
-    @PostMapping("/delete_user/{id}")
+    @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable Long id) {
         userDetailsService.deleteUserById(id);
     }

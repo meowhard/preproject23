@@ -1,5 +1,6 @@
+//Получение авторизованного пользователя (для панели юзера)
 function getUser() {
-    $.get('/get_authorized_user', function (user_data) {
+    $.get('/users/authorized', function (user_data) {
         console.log(user_data);
 
         let table = "<tr>" +
@@ -14,8 +15,9 @@ function getUser() {
     });
 }
 
+//Заполнение таблицы всех юзеров
 function getAllUsers() {
-    $.get('/get_all_users', function (users_data) {
+    $.get('/users', function (users_data) {
         console.log(users_data);
 
         let table = "";
@@ -50,7 +52,7 @@ function editUser(id) {
         show: true
     })
 
-    $.get('/get_user_by_id/' + id, function (user_data) {
+    $.get('/users/' + id, function (user_data) {
         $('#editId').val(user_data.id).attr('disabled', 'disabled');
         $('#editName').val(user_data.username);
         $('#editPassword').val(user_data.password);
@@ -72,24 +74,28 @@ function deleteUser(id) {
         show: true
     })
 
-    $.get('/get_user_by_id/' + id, function (user_data) {
-        $('#deleteId').val(user_data.id).attr('disabled', 'disabled');
-        $('#deleteName').val(user_data.username).attr('disabled', 'disabled');
-        $('#deletePassword').val(user_data.password).attr('disabled', 'disabled');
-        $('#deleteAge').val(user_data.age).attr('disabled', 'disabled');
-        $('#deleteEmail').val(user_data.email).attr('disabled', 'disabled');
-        if(user_data.roles.includes('ROLE_USER') && user_data.roles.includes('ROLE_ADMIN')) {
-            $('#deleteRoles').selectpicker('selectAll').attr('disabled', 'disabled');
-            $('.dropdown-toggle').css("display","none");
-            $('.dropdown-menu').css("display","none");
-        } else {
-            $('#deleteRoles').val(user_data.roles).attr('disabled', 'disabled');
+    $.ajax({
+        url: '/users/' + id,
+        type: 'GET',
+        success: function (user_data) {
+            $('#deleteId').val(user_data.id).attr('disabled', 'disabled');
+            $('#deleteName').val(user_data.username).attr('disabled', 'disabled');
+            $('#deletePassword').val(user_data.password).attr('disabled', 'disabled');
+            $('#deleteAge').val(user_data.age).attr('disabled', 'disabled');
+            $('#deleteEmail').val(user_data.email).attr('disabled', 'disabled');
+            if(user_data.roles.includes('ROLE_USER') && user_data.roles.includes('ROLE_ADMIN')) {
+                $('#deleteRoles').selectpicker('selectAll').attr('disabled', 'disabled');
+                $('.dropdown-toggle').css("display","none");
+                $('.dropdown-menu').css("display","none");
+            } else {
+                $('#deleteRoles').val(user_data.roles).attr('disabled', 'disabled');
+            }
         }
-    })
+    });
 }
 
 function getAuthUserEmailAndRoles() {
-    $.get('/get_authorized_user', function (user_data) {
+    $.get('/users/authorized', function (user_data) {
         $('#authUserEmail').html(user_data.email);
         $('#authUserRoles').html(user_data.roles);
     })
@@ -110,10 +116,8 @@ $('#editButton').click(function () {
     var email = $('#editEmail').val();
     var roles = $('#editRoles').val().join(", ");
 
-
-
     $.ajax({
-        url:'/edit_user/' + id,
+        url:'/users/' + id,
         type: 'POST',
         cache: false,
         async: false,
@@ -139,8 +143,8 @@ $('#deleteButton').click(function () {
     var id = $('#deleteId').val();
 
     $.ajax({
-        url:'/delete_user/' + id,
-        type: 'POST',
+        url:'/users/' + id,
+        type: 'DELETE',
         cache: false,
         async: false,
         contentType: 'application/json',
@@ -165,8 +169,8 @@ $('#addButton').click(function () {
    var roles = $('#roles').val().join(", ");
 
    $.ajax({
-       url:'/save_user',
-       type: 'POST',
+       url:'/users',
+       type: 'PUT',
        cache: false,
        async: false,
        data: JSON.stringify({
@@ -188,6 +192,7 @@ $('#addButton').click(function () {
 
 $(document).ready(function () {
 
+    getUser();
     getAuthUserEmailAndRoles();
     getAllUsers();
 
