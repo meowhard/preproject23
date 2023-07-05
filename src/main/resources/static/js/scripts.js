@@ -27,8 +27,16 @@ function getAllUsers() {
                 "<td>"  + users_data[i].age + "</td>" +
                 "<td>" + users_data[i].email + "</td>" +
                 "<td>" + users_data[i].roles + "</td>" +
-                "<td><button onclick='editUser(" + users_data[i].id + ")' type=\"button\" class=\"btn btn-success\">Edit</button></td>" +
-                "<td><button id=\"delete" + users_data[i].id + "\" type=\"button\" class=\"btn btn-danger\">Delete</button></td>" +
+                "<td><button onclick='editUser(" + users_data[i].id + ")' " +
+                    "type='button' " +
+                    "class='btn btn-success' " +
+                    "data-bs-toggle='modal' " +
+                    "data-bs-target='#modalEdit'>Edit</button></td>" +
+                "<td><button onclick='deleteUser(" + users_data[i].id + ")' " +
+                    "type='button' " +
+                    "class='btn btn-danger' " +
+                    "data-bs-toggle='modal' " +
+                    "data-bs-target='#modalDelete'>Delete</button></td>" +
                 "</tr>";
         }
 
@@ -38,9 +46,104 @@ function getAllUsers() {
 
 function editUser(id) {
 
-        $('#modalEdit').modal
+    $('#modalEdit').modal({
+        show: true
+    })
 
+    $.get('/get_user_by_id/' + id, function (user_data) {
+        $('#editId').val(user_data.id).attr('disabled', 'disabled');
+        $('#editName').val(user_data.username);
+        $('#editPassword').val(user_data.password);
+        $('#editAge').val(user_data.age);
+        $('#editEmail').val(user_data.email);
+        if(user_data.roles.includes('ROLE_USER') && user_data.roles.includes('ROLE_ADMIN')) {
+            $('#editRoles').selectpicker('selectAll');
+            $('.dropdown-toggle').css("display","none");
+            $('.dropdown-menu').css("display","none");
+        } else {
+            $('#editRoles').val(user_data.roles);
+        }
+    })
 }
+
+function deleteUser(id) {
+
+    $('#modalDelete').modal({
+        show: true
+    })
+
+    $.get('/get_user_by_id/' + id, function (user_data) {
+        $('#deleteId').val(user_data.id).attr('disabled', 'disabled');
+        $('#deleteName').val(user_data.username).attr('disabled', 'disabled');
+        $('#deletePassword').val(user_data.password).attr('disabled', 'disabled');
+        $('#deleteAge').val(user_data.age).attr('disabled', 'disabled');
+        $('#deleteEmail').val(user_data.email).attr('disabled', 'disabled');
+        if(user_data.roles.includes('ROLE_USER') && user_data.roles.includes('ROLE_ADMIN')) {
+            $('#deleteRoles').selectpicker('selectAll').attr('disabled', 'disabled');
+            $('.dropdown-toggle').css("display","none");
+            $('.dropdown-menu').css("display","none");
+        } else {
+            $('#deleteRoles').val(user_data.roles).attr('disabled', 'disabled');
+        }
+    })
+}
+
+$('#editButton').click(function () {
+    var name = $('#editName').val();
+    var password = $('#editPassword').val();
+    var age = $('#editAge').val();
+    var email = $('#editEmail').val();
+    var roles = $('#editRoles').val().join(", ");
+
+    $('#modalEdit').modal({
+        show: false
+    })
+
+    $.ajax({
+        url:'/edit_user',
+        type: 'POST',
+        cache: false,
+        async: false,
+        data: JSON.stringify({
+            'username': name,
+            'password': password,
+            'age': age,
+            'email': email,
+            'roles': roles
+        }),
+        contentType: 'application/json',
+        error : [function(jqXHR, textStatus, errorThrown){
+            alert(textStatus)
+        }],
+        success: [function () {
+
+
+            getAllUsers();
+        }]
+    })
+});
+
+$('#deleteButton').click(function () {
+    var id = $('#deleteId').val();
+
+    $.ajax({
+        url:'/delete_user/' + id,
+        type: 'POST',
+        cache: false,
+        async: false,
+        contentType: 'application/json',
+        error : [function(jqXHR, textStatus, errorThrown){
+            alert(textStatus)
+        }],
+        success: [function () {
+            $('#modalDelete').modal({
+                show: false
+            })
+
+            getAllUsers();
+        }]
+    })
+});
 
 $('#addButton').click(function () {
    var name = $('#name').val();
@@ -50,7 +153,7 @@ $('#addButton').click(function () {
    var roles = $('#roles').val().join(", ");
 
    $.ajax({
-       url:'/saveUser',
+       url:'/save_user',
        type: 'POST',
        cache: false,
        async: false,

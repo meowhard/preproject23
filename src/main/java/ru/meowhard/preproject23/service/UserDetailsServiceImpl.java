@@ -58,8 +58,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userRepository.findById(id).get();
     }
 
-    public User getUserByName(String name) {
-        return userRepository.findUserByUsername(name);
+    public User getUserByName(String username) {
+        return userRepository.findUserByUsername(username);
     }
 
     public void updateUser(User user, User existingUser) {
@@ -68,6 +68,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         existingUser.setAge(user.getAge());
         existingUser.setEmail(user.getEmail());
         existingUser.setRoles(user.getRoles());
+        userRepository.save(existingUser);
+    }
+
+    public void updateUser(UserDTO userDTO, User existingUser) {
+        existingUser.setUsername(userDTO.getUsername());
+        existingUser.setPassword(userDTO.getPassword());
+        existingUser.setAge(userDTO.getAge());
+        existingUser.setEmail(userDTO.getEmail());
+        existingUser.setRoles(userDTO.getStringRolesToList());
         userRepository.save(existingUser);
     }
 

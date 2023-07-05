@@ -14,6 +14,8 @@ import java.util.List;
 @RestController
 public class UserRestController {
 
+    private Long id;
+
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
@@ -29,8 +31,25 @@ public class UserRestController {
         return userDetailsService.getUserDTOlist(userList);
     }
 
-    @PostMapping("/saveUser")
+    @PostMapping("/save_user")
     public void saveNewUser(@RequestBody UserDTO userDTO) {
         userDetailsService.saveUser(userDTO);
+    }
+
+    @GetMapping("/get_user_by_id/{id}")
+    public UserDTO getUserById(@PathVariable Long id) {
+        User user = userDetailsService.getUserById(id);
+        return new UserDTO(user);
+    }
+
+    @PostMapping("/edit_user")
+    public void editUser(@RequestBody UserDTO userDTO) {
+        User existingUser = userDetailsService.getUserByName(userDTO.getUsername());
+        userDetailsService.updateUser(userDTO, existingUser);
+    }
+
+    @PostMapping("/delete_user/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userDetailsService.deleteUserById(id);
     }
 }
