@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.meowhard.preproject23.dto.UserDTO;
-import ru.meowhard.preproject23.mapper.UserDTOMapper;
 import ru.meowhard.preproject23.mapper.UserMapper;
 import ru.meowhard.preproject23.model.User;
 import ru.meowhard.preproject23.repository.UserRepository;
@@ -22,9 +21,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserMapper userMapper;
-
-    @Autowired
-    private UserDTOMapper userDTOMapper;
 
     public UserDetailsServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -63,40 +59,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userRepository.findUserByUsername(username);
     }
 
-    public void updateUser(User user, User existingUser) {
-        existingUser.setUsername(user.getUsername());
-        existingUser.setPassword(user.getPassword());
-        existingUser.setAge(user.getAge());
-        existingUser.setEmail(user.getEmail());
-        existingUser.setRoles(user.getRoles());
-        userRepository.save(existingUser);
-    }
-
     public void updateUser(UserDTO userDTO, User existingUser) {
         existingUser.setUsername(userDTO.getUsername());
         existingUser.setPassword(userDTO.getPassword());
         existingUser.setAge(userDTO.getAge());
         existingUser.setEmail(userDTO.getEmail());
-        existingUser.setRoles(userDTOMapper.mapRolesStringToList(userDTO));
+        existingUser.setRoles(userMapper.mapRolesStringToList(userDTO));
         userRepository.save(existingUser);
     }
 
     public void deleteUserById(Long id) {
         userRepository.deleteById(id);
-    }
-
-    public List<UserDTO> getUserDTOlist(List<User> userList) {
-        List<UserDTO> userDTOList = new ArrayList<>();
-        for(User user:userList) {
-            UserDTO userDTO = new UserDTO();
-            userDTO.setId(user.getId());
-            userDTO.setUsername(user.getUsername());
-            userDTO.setPassword(user.getPassword());
-            userDTO.setAge(user.getAge());
-            userDTO.setEmail(user.getEmail());
-            userDTO.setRoles(user.getRolesToString());
-            userDTOList.add(userDTO);
-        }
-        return userDTOList;
     }
 }

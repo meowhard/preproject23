@@ -1,53 +1,55 @@
 package ru.meowhard.preproject23.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.meowhard.preproject23.dto.UserDTO;
+import ru.meowhard.preproject23.mapper.UserMapper;
 import ru.meowhard.preproject23.model.User;
 import ru.meowhard.preproject23.service.UserDetailsServiceImpl;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/users")
 public class UserRestController {
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
-    @GetMapping("/users/authorized")
+    @GetMapping("/authorized")
     public UserDTO getUserData(Principal principal) {
         User user = userDetailsService.getUserByName(principal.getName());
-        return new UserDTO(user);
+        return UserMapper.mapToUserDTO(user);
     }
 
-    @GetMapping("/users")
+    @GetMapping
     public List<UserDTO> getAllUsers() {
-        List<User> userList = userDetailsService.getAllUsers();
-        return userDetailsService.getUserDTOlist(userList);
+        return userDetailsService.getAllUsers().stream()
+                .map(UserMapper::mapToUserDTO)
+                .collect(Collectors.toList());
     }
 
-    @PutMapping("/users")
+    @PutMapping
     public void saveNewUser(@RequestBody UserDTO userDTO) {
         userDetailsService.saveUser(userDTO);
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public UserDTO getUserById(@PathVariable Long id) {
         User user = userDetailsService.getUserById(id);
-        return new UserDTO(user);
+        return UserMapper.mapToUserDTO(user);
     }
 
-    @PostMapping("/users/{id}")
+    @PostMapping("/{id}")
     public void editUser(@RequestBody UserDTO userDTO, @PathVariable Long id) {
         System.out.println(userDTO.toString());
         User existingUser = userDetailsService.getUserById(id);
         userDetailsService.updateUser(userDTO, existingUser);
     }
 
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
         userDetailsService.deleteUserById(id);
     }
