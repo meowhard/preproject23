@@ -165,7 +165,9 @@
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="adminRequestsButton" data-bs-toggle="tab" data-bs-target="#requests"
-                                type="button" role="tab" aria-controls="users" aria-selected="true">Admin requests</button>
+                                type="button" role="tab" aria-controls="users" aria-selected="true">
+                            Admin requests <span id="requestNotificationCounter" class="badge bg-danger"></span>
+                        </button>
                     </li>
                 </ul>
 
@@ -235,7 +237,7 @@
                     </div>
                 </div>
 
-                <!--Вкладка Admin requests-->
+<!--Вкладка Admin requests-->
                 <div id="adminRequestsPage" class="tab-content d-none">
                     <h5 class="mt-2 mx-2"> Admin requests </h5>
                     <div class="tab-pane fade show active w-50" role="tabpanel" aria-labelledby="users-tab">

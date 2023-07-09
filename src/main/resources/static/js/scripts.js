@@ -1,4 +1,4 @@
-//Получение авторизованного пользователя (для панели юзера)
+//Функция для получения авторизованного пользователя (для панели юзера)
 function getUser() {
     $.get('/users/authorized', function (user_data) {
         console.log(user_data);
@@ -15,7 +15,7 @@ function getUser() {
     });
 }
 
-//Заполнение таблицы всех юзеров
+//Функция для заполнения таблицы всех юзеров
 function getAllUsers() {
     $.get('/users', function (users_data) {
         console.log(users_data);
@@ -46,7 +46,7 @@ function getAllUsers() {
     });
 }
 
-//Заполнение таблицы реквестов
+//Функция для заполнения таблицы реквестов
 function getAllRequests() {
     $.get('/users/requests', function (requests_data) {
         console.log(requests_data);
@@ -69,6 +69,21 @@ function getAllRequests() {
     });
 }
 
+//Функция для получения количества реквестов
+function getRequestsCount() {
+    $.get('/users/requests', function (requests_data) {
+        console.log(requests_data);
+
+        if(requests_data.length > 0) {
+            $('#requestNotificationCounter').text(requests_data.length);
+        } else {
+            $('#requestNotificationCounter').text('');
+        }
+    });
+}
+
+
+//Функция для отображения модального окна edit
 function editUser(id) {
 
     $('#modalEdit').modal({
@@ -91,6 +106,7 @@ function editUser(id) {
     })
 }
 
+//Функция для отображения модального окна delete
 function deleteUser(id) {
 
     $('#modalDelete').modal({
@@ -117,6 +133,7 @@ function deleteUser(id) {
     });
 }
 
+//функция для кнопки Approve
 function approveRequest(id) {
     $.ajax({
         url:'/users/requests/' + id,
@@ -130,10 +147,12 @@ function approveRequest(id) {
         success: [function () {
             getAllRequests();
             getAllUsers();
+            getRequestsCount();
         }]
     })
 }
 
+//функция для кнопки Deny
 function denyRequest(id) {
     $.ajax({
         url:'/users/requests/' + id,
@@ -146,10 +165,12 @@ function denyRequest(id) {
         }],
         success: [function () {
             getAllRequests();
+            getRequestsCount();
         }]
     })
 }
 
+//функция для получения состояния реквеста (нужна для дизейбла кнопки Get admin rights)
 function getRequestStatus() {
     $.get('/users/authorized', function (user_data) {
         console.log(user_data);
@@ -161,6 +182,7 @@ function getRequestStatus() {
     });
 }
 
+//Функция для отображения данных авторизованного пользователя в шапке
 function getAuthUserEmailAndRoles() {
     $.get('/users/authorized', function (user_data) {
         $('#authUserEmail').html(user_data.email);
@@ -175,6 +197,7 @@ function closeEditModal() {
     })
 }
 
+//Click для кнопки Edit внутри модалки для сохранения изменений в базу
 $('#editButton').click(function () {
     var id = $('#editId').val();
     var name = $('#editName').val();
@@ -206,6 +229,7 @@ $('#editButton').click(function () {
     })
 });
 
+//Click для кнопки Delete внутри модалки для удаления пользователя из базы
 $('#deleteButton').click(function () {
     var id = $('#deleteId').val();
 
@@ -228,6 +252,7 @@ $('#deleteButton').click(function () {
     })
 });
 
+//Click для кнопки Add в поле создания нового пользователя для записи его в базу
 $('#addButton').click(function () {
    var name = $('#name').val();
    var password = $('#password').val();
@@ -257,6 +282,7 @@ $('#addButton').click(function () {
    })
 });
 
+//Click для кнопки Get admin rights для отправки реквеста на получение админских прав
 $('#getAdminRightsButton').click(function () {
     $.get('/users/authorized', function (user_data) {
         var id = user_data.id;
@@ -283,6 +309,7 @@ $(document).ready(function () {
     getAuthUserEmailAndRoles();
     getAllUsers();
     getAllRequests();
+    getRequestsCount();
 
     $('#addUserButton').click(function () {
         console.log("addUserButton нажата");
