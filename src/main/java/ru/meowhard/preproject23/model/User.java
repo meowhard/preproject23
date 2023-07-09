@@ -38,6 +38,9 @@ public class User implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Role> roles;
 
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Request request;
+
     public User(String name, int age, String email) {
         this.username = name;
         this.age = age;
@@ -46,6 +49,10 @@ public class User implements UserDetails {
 
     public String getRolesToString() {
         return this.roles.stream().map(String::valueOf).collect(Collectors.joining(", "));
+    }
+
+    public boolean getRequest() {
+        return this.request.getRequestStatus();
     }
 
     @Override

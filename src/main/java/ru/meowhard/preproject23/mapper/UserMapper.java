@@ -2,6 +2,7 @@ package ru.meowhard.preproject23.mapper;
 
 import org.springframework.stereotype.Component;
 import ru.meowhard.preproject23.dto.UserDTO;
+import ru.meowhard.preproject23.model.Request;
 import ru.meowhard.preproject23.model.Role;
 import ru.meowhard.preproject23.model.User;
 
@@ -19,6 +20,7 @@ public class UserMapper {
                 .age(userDTO.getAge())
                 .email(userDTO.getEmail())
                 .roles(mapRolesStringToList(userDTO))
+                .request(new Request(false))
                 .build();
     }
 
@@ -30,6 +32,7 @@ public class UserMapper {
                 .age(user.getAge())
                 .email(user.getEmail())
                 .roles(user.getRolesToString())
+                .request(user.getRequest())
                 .build();
     }
 

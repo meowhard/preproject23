@@ -44,7 +44,6 @@ public class UserRestController {
 
     @PostMapping("/{id}")
     public void editUser(@RequestBody UserDTO userDTO, @PathVariable Long id) {
-        System.out.println(userDTO.toString());
         User existingUser = userDetailsService.getUserById(id);
         userDetailsService.updateUser(userDTO, existingUser);
     }
@@ -52,5 +51,25 @@ public class UserRestController {
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
         userDetailsService.deleteUserById(id);
+    }
+
+    @GetMapping("/requests")
+    public List<UserDTO> getAllRequests() {
+        return userDetailsService.getUsersWithRequests();
+    }
+
+    @PutMapping("/requests/{id}")
+    public void saveRequest(@PathVariable Long id) {
+        userDetailsService.saveRequest(id);
+    }
+
+    @DeleteMapping("/requests/{id}")
+    public void denyRequest(@PathVariable Long id) {
+        userDetailsService.denyRequest(id);
+    }
+
+    @GetMapping("/requests/{id}")
+    public void approveRequest(@PathVariable Long id) {
+        userDetailsService.approveRequest(id);
     }
 }

@@ -46,6 +46,29 @@ function getAllUsers() {
     });
 }
 
+//Заполнение таблицы реквестов
+function getAllRequests() {
+    $.get('/users/requests', function (requests_data) {
+        console.log(requests_data);
+
+        let table = "";
+
+        for (i = 0; i < requests_data.length; i++) {
+            table = table + "<tr>" +
+                "<td>" + requests_data[i].username + "</td>" +
+                "<td><button onclick='approveRequest(" + requests_data[i].id + ")' " +
+                "type='button' " +
+                "class='btn btn-success'>Approve</button></td>" +
+                "<td><button onclick='denyRequest(" + requests_data[i].id + ")' " +
+                "type='button' " +
+                "class='btn btn-danger'>Deny</button></td>" +
+                "</tr>";
+        }
+
+        $('#admin_requests').html(table);
+    });
+}
+
 function editUser(id) {
 
     $('#modalEdit').modal({
@@ -91,6 +114,50 @@ function deleteUser(id) {
                 $('#deleteRoles').val(user_data.roles).attr('disabled', 'disabled');
             }
         }
+    });
+}
+
+function approveRequest(id) {
+    $.ajax({
+        url:'/users/requests/' + id,
+        type: 'GET',
+        cache: false,
+        async: false,
+        contentType: 'application/json',
+        error : [function(jqXHR, textStatus, errorThrown){
+            alert(textStatus)
+        }],
+        success: [function () {
+            getAllRequests();
+            getAllUsers();
+        }]
+    })
+}
+
+function denyRequest(id) {
+    $.ajax({
+        url:'/users/requests/' + id,
+        type: 'DELETE',
+        cache: false,
+        async: false,
+        contentType: 'application/json',
+        error : [function(jqXHR, textStatus, errorThrown){
+            alert(textStatus)
+        }],
+        success: [function () {
+            getAllRequests();
+        }]
+    })
+}
+
+function getRequestStatus() {
+    $.get('/users/authorized', function (user_data) {
+        console.log(user_data);
+
+        if (user_data.request) {
+            $('#getAdminRightsButton').addClass('disabled');
+        } else
+            $('#getAdminRightsButton').removeClass('disabled');
     });
 }
 
@@ -190,38 +257,70 @@ $('#addButton').click(function () {
    })
 });
 
-$(document).ready(function () {
+$('#getAdminRightsButton').click(function () {
+    $.get('/users/authorized', function (user_data) {
+        var id = user_data.id;
+        $.ajax({
+            url:'/users/requests/' + id,
+            type: 'PUT',
+            cache: false,
+            async: false,
+            contentType: 'application/json',
+            error : [function(jqXHR, textStatus, errorThrown){
+                alert(textStatus)
+            }],
+            success: [function () {
+                $('#getAdminRightsButton').addClass('disabled');
+            }]
+        })
+    })
 
+})
+
+$(document).ready(function () {
     getUser();
+    getRequestStatus();
     getAuthUserEmailAndRoles();
     getAllUsers();
+    getAllRequests();
 
     $('#addUserButton').click(function () {
-
         console.log("addUserButton нажата");
 
         $('#usersTablePage').addClass('d-none');
+        $('#adminRequestsPage').addClass('d-none');
         $('#addUserPage').removeClass('d-none');
 
         $('#usersTableButton').removeClass('active');
+        $('#adminRequestsButton').removeClass('active');
         $('#addUserButton').addClass('active');
-
-
     });
 
     $('#usersTableButton').click(function () {
-
         console.log("usersTableButton нажата");
 
         $('#addUserPage').addClass('d-none');
+        $('#adminRequestsPage').addClass('d-none');
         $('#usersTablePage').removeClass('d-none');
 
         $('#addUserButton').removeClass('active');
+        $('#adminRequestsButton').removeClass('active');
         $('#usersTableButton').addClass('active');
     });
 
-    $('#userPanelButton').click(function () {
+    $('#adminRequestsButton').click(function () {
+        console.log("adminRequestsButton нажата");
 
+        $('#usersTablePage').addClass('d-none');
+        $('#addUserPage').addClass('d-none');
+        $('#adminRequestsPage').removeClass('d-none');
+
+        $('#addUserButton').removeClass('active');
+        $('#usersTableButton').removeClass('active');
+        $('#adminRequestsButton').addClass('active');
+    });
+
+    $('#userPanelButton').click(function () {
         console.log("userPanelButton нажата");
 
         $('#adminPanel').addClass('d-none');
@@ -232,7 +331,6 @@ $(document).ready(function () {
     });
 
     $('#adminPanelButton').click(function () {
-
         console.log("userPanelButton нажата");
 
         $('#userPanel').addClass('d-none');
@@ -241,6 +339,4 @@ $(document).ready(function () {
         $('#adminPanelButton').removeClass('btn-link').addClass('btn-primary');
         $('#userPanelButton').removeClass('btn-primary').addClass('btn-link');
     });
-    
-
 });

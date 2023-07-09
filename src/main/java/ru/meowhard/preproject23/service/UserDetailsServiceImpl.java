@@ -7,11 +7,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.meowhard.preproject23.dto.UserDTO;
 import ru.meowhard.preproject23.mapper.UserMapper;
+import ru.meowhard.preproject23.model.Request;
+import ru.meowhard.preproject23.model.Role;
 import ru.meowhard.preproject23.model.User;
 import ru.meowhard.preproject23.repository.UserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -70,5 +72,31 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public void deleteUserById(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public void saveRequest(Long userId) {
+        User user = userRepository.findById(userId).get();
+        user.setRequest(new Request(true));
+        userRepository.save(user);
+    }
+
+    public List<UserDTO> getUsersWithRequests() {
+        return userRepository.findAllByRequestRequestStatus(true).stream()
+                .map(UserMapper::mapToUserDTO)
+                .collect(Collectors.toList());
+    }
+
+    public void denyRequest(Long userId) {
+        User user = userRepository.findById(userId).get();
+        user.setRequest(new Request(false));
+        userRepository.save(user);
+    }
+
+    public void approveRequest(Long userId) {
+        User user = userRepository.findById(userId).get();
+        List<Role> roleList = user.getRoles();
+        roleList.add(new Role("ROLE_ADMIN"));
+        user.setRequest(new Request(false));
+        userRepository.save(user);
     }
 }
