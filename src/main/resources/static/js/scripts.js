@@ -197,6 +197,36 @@ function closeEditModal() {
     })
 }
 
+//asdasdasdasdasdasdas
+const stompClient = new StompJs.Client({
+    brokerURL: 'ws://localhost:8080/request'
+});
+
+stompClient.onConnect = (frame) => {
+    console.log('Connected: ' + frame);
+    stompClient.subscribe('/topic/request', (message) => {
+        console.log("12312313123")
+        console.log(message)
+    });
+};
+
+stompClient.onWebSocketError = (error) => {
+    console.error('Error with websocket', error);
+};
+
+stompClient.onStompError = (frame) => {
+    console.error('Broker reported error: ' + frame.headers['message']);
+    console.error('Additional details: ' + frame.body);
+};
+
+function sendMessage() {
+    console.log("Message sent");
+}
+
+function connect() {
+    stompClient.activate();
+}
+
 //Click для кнопки Edit внутри модалки для сохранения изменений в базу
 $('#editButton').click(function () {
     var id = $('#editId').val();
@@ -310,6 +340,7 @@ $(document).ready(function () {
     getAllUsers();
     getAllRequests();
     getRequestsCount();
+    connect();
 
     $('#addUserButton').click(function () {
         console.log("addUserButton нажата");
