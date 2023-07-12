@@ -69,20 +69,6 @@ function getAllRequests() {
     });
 }
 
-//Функция для получения количества реквестов
-function getRequestsCount() {
-    $.get('/users/requests', function (requests_data) {
-        console.log(requests_data);
-
-        if(requests_data.length > 0) {
-            $('#requestNotificationCounter').text(requests_data.length);
-        } else {
-            $('#requestNotificationCounter').text('');
-        }
-    });
-}
-
-
 //Функция для отображения модального окна edit
 function editUser(id) {
 
@@ -182,6 +168,12 @@ function getRequestStatus() {
     });
 }
 
+function getActiveRequests() {
+    $.get('/users/requests', function (requests_data) {
+        console.log(requests_data);
+    });
+}
+
 //Функция для отображения данных авторизованного пользователя в шапке
 function getAuthUserEmailAndRoles() {
     $.get('/users/authorized', function (user_data) {
@@ -198,33 +190,32 @@ function closeEditModal() {
 }
 
 //asdasdasdasdasdasdas
-const stompClient = new StompJs.Client({
-    brokerURL: 'ws://localhost:8080/request'
-});
+//фывфывфывфыв
+//фывфывфывфыв
 
-stompClient.onConnect = (frame) => {
-    console.log('Connected: ' + frame);
-    stompClient.subscribe('/topic/request', (message) => {
-        console.log("12312313123")
-        console.log(message)
-    });
+ws = new WebSocket("ws://localhost:8080/ws")
+
+ws.onopen = function () {
+    console.log("ws.onopen");
 };
 
-stompClient.onWebSocketError = (error) => {
-    console.error('Error with websocket', error);
-};
-
-stompClient.onStompError = (frame) => {
-    console.error('Broker reported error: ' + frame.headers['message']);
-    console.error('Additional details: ' + frame.body);
-};
-
-function sendMessage() {
-    console.log("Message sent");
+ws.onmessage = function () {
+    getRequestsCount();
 }
 
-function connect() {
-    stompClient.activate();
+//Функция для получения количества реквестов
+function getRequestsCount() {
+    $.get('/users/requests', function (requests_data) {
+        console.log(requests_data);
+
+        ws.send(requests_data.length);
+
+        if(requests_data.length > 0) {
+            $('#requestNotificationCounter').text(requests_data.length);
+        } else {
+            $('#requestNotificationCounter').text('');
+        }
+    });
 }
 
 //Click для кнопки Edit внутри модалки для сохранения изменений в базу
@@ -316,6 +307,7 @@ $('#addButton').click(function () {
 $('#getAdminRightsButton').click(function () {
     $.get('/users/authorized', function (user_data) {
         var id = user_data.id;
+
         $.ajax({
             url:'/users/requests/' + id,
             type: 'PUT',
@@ -331,6 +323,7 @@ $('#getAdminRightsButton').click(function () {
         })
     })
 
+    getRequestsCount();
 })
 
 $(document).ready(function () {
@@ -340,7 +333,6 @@ $(document).ready(function () {
     getAllUsers();
     getAllRequests();
     getRequestsCount();
-    connect();
 
     $('#addUserButton').click(function () {
         console.log("addUserButton нажата");
