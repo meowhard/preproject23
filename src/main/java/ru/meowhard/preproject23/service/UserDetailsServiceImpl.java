@@ -64,6 +64,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public void updateUser(UserDTO userDTO, User existingUser) {
         existingUser.setUsername(userDTO.getUsername());
         existingUser.setPassword(userDTO.getPassword());
+        existingUser.setVkId(userDTO.getVkId());
         existingUser.setAge(userDTO.getAge());
         existingUser.setEmail(userDTO.getEmail());
         existingUser.setRoles(userMapper.mapRolesStringToList(userDTO));

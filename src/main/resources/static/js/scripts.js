@@ -5,6 +5,7 @@ function getUser() {
 
         let table = "<tr>" +
             "<td>" + user_data.id + "</td>" +
+            "<td>" + user_data.vkId + "</td>" +
             "<td>" + user_data.username + "</td>" +
             "<td>" + user_data.age + "</td>" +
             "<td>" + user_data.email + "</td>" +
@@ -15,18 +16,31 @@ function getUser() {
     });
 }
 
+
+
+//
+//TODO: ДОДЕЛАТЬ
+//
 //Функция для заполнения таблицы всех юзеров
 function getAllUsers() {
     $.get('/users', function (users_data) {
         console.log(users_data);
 
         let table = "";
+        var vkIdLink = "";
 
         for (i = 0; i < users_data.length; i++) {
+            if (users_data[i].vkId.includes("null")) {
+                vkIdLink = "";
+            } else {
+                vkIdLink = "<img src='' >"
+            }
+
             table = table + "<tr>" +
                 "<td>" + users_data[i].id + "</td>" +
+                "<td><div id='image" + id + "'></div></td>" +
                 "<td>" + users_data[i].username + "</td>" +
-                "<td>"  + users_data[i].age + "</td>" +
+                "<td>" + users_data[i].age + "</td>" +
                 "<td>" + users_data[i].email + "</td>" +
                 "<td>" + users_data[i].roles + "</td>" +
                 "<td><button onclick='editUser(" + users_data[i].id + ")' " +
@@ -43,6 +57,18 @@ function getAllUsers() {
         }
 
         $('#all_users').html(table);
+    });
+}
+
+
+//
+//TODO: ДОДЕЛАТЬ
+//
+function getVkPictures() {
+    $.get('/users', function (users_data) {
+        for (i = 0; i < users_data.length; i++) {
+
+        }
     });
 }
 
@@ -80,6 +106,7 @@ function editUser(id) {
         $('#editId').val(user_data.id).attr('disabled', 'disabled');
         $('#editName').val(user_data.username);
         $('#editPassword').val(user_data.password);
+        $('#editVkID').val(user_data.vkId);
         $('#editAge').val(user_data.age);
         $('#editEmail').val(user_data.email);
         if(user_data.roles.includes('ROLE_USER') && user_data.roles.includes('ROLE_ADMIN')) {
@@ -106,6 +133,7 @@ function deleteUser(id) {
             $('#deleteId').val(user_data.id).attr('disabled', 'disabled');
             $('#deleteName').val(user_data.username).attr('disabled', 'disabled');
             $('#deletePassword').val(user_data.password).attr('disabled', 'disabled');
+            $('#deleteVkID').val(user_data.vkId).attr('disabled', 'disabled');
             $('#deleteAge').val(user_data.age).attr('disabled', 'disabled');
             $('#deleteEmail').val(user_data.email).attr('disabled', 'disabled');
             if(user_data.roles.includes('ROLE_USER') && user_data.roles.includes('ROLE_ADMIN')) {
@@ -196,19 +224,23 @@ function closeEditModal() {
 ws = new WebSocket("ws://localhost:8080/ws")
 
 ws.onopen = function () {
-    console.log("ws.onopen");
+    getRequestsCount();
+    console.log("WS Opened");
 };
 
-ws.onmessage = function () {
+ws.onmessage = function (ev) {
     getRequestsCount();
+    console.log("MESSAGE ARRIVED");
 }
 
-//Функция для получения количества реквестов
+ws.onclose = function (err) {
+    console.log("WS Closed")
+}
+
+//Функция для получения количества реквестов и записи в counter
 function getRequestsCount() {
     $.get('/users/requests', function (requests_data) {
         console.log(requests_data);
-
-        ws.send(requests_data.length);
 
         if(requests_data.length > 0) {
             $('#requestNotificationCounter').text(requests_data.length);
@@ -223,6 +255,7 @@ $('#editButton').click(function () {
     var id = $('#editId').val();
     var name = $('#editName').val();
     var password = $('#editPassword').val();
+    var vkId = $('#editVkID').val();
     var age = $('#editAge').val();
     var email = $('#editEmail').val();
     var roles = $('#editRoles').val().join(", ");
@@ -235,6 +268,7 @@ $('#editButton').click(function () {
         data: JSON.stringify({
             'username': name,
             'password': password,
+            'vkId': vkId,
             'age': age,
             'email': email,
             'roles': roles
@@ -277,6 +311,7 @@ $('#deleteButton').click(function () {
 $('#addButton').click(function () {
    var name = $('#name').val();
    var password = $('#password').val();
+   var vkId = $('#vkId').val();
    var age = $('#age').val();
    var email = $('#email').val();
    var roles = $('#roles').val().join(", ");
@@ -289,6 +324,7 @@ $('#addButton').click(function () {
        data: JSON.stringify({
            'username': name,
            'password': password,
+           'vkId': vkId,
            'age': age,
            'email': email,
            'roles': roles
@@ -319,11 +355,10 @@ $('#getAdminRightsButton').click(function () {
             }],
             success: [function () {
                 $('#getAdminRightsButton').addClass('disabled');
+                ws.send("null");
             }]
         })
     })
-
-    getRequestsCount();
 })
 
 $(document).ready(function () {
@@ -332,7 +367,6 @@ $(document).ready(function () {
     getAuthUserEmailAndRoles();
     getAllUsers();
     getAllRequests();
-    getRequestsCount();
 
     $('#addUserButton').click(function () {
         console.log("addUserButton нажата");
@@ -360,6 +394,8 @@ $(document).ready(function () {
 
     $('#adminRequestsButton').click(function () {
         console.log("adminRequestsButton нажата");
+
+        getAllRequests();
 
         $('#usersTablePage').addClass('d-none');
         $('#addUserPage').addClass('d-none');
