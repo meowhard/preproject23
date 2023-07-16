@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -18,11 +20,15 @@ public class UserDTO {
 
     private String password;
 
-    private int age;
+    private String dateOfBirth;
 
     private String email;
 
     private String roles;
 
     private boolean request;
+
+    public LocalDate getDateOfBirth() {
+        return LocalDate.parse(dateOfBirth);
+    }
 }

@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,8 +33,8 @@ public class User implements UserDetails {
     @Column(name = "Password")
     private String password;
 
-    @Column(name = "Age")
-    private int age;
+    @Column(name = "DateOfBirth")
+    private LocalDate dateOfBirth;
 
     @Column(name = "Email")
     private String email;
@@ -44,9 +45,9 @@ public class User implements UserDetails {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Request request;
 
-    public User(String name, int age, String email) {
+    public User(String name, LocalDate dateOfBirth, String email) {
         this.username = name;
-        this.age = age;
+        this.dateOfBirth = dateOfBirth;
         this.email = email;
     }
 

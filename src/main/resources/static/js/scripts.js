@@ -7,7 +7,7 @@ function getUser() {
             "<td>" + user_data.id + "</td>" +
             "<td>" + user_data.vkId + "</td>" +
             "<td>" + user_data.username + "</td>" +
-            "<td>" + user_data.age + "</td>" +
+            "<td>" + user_data.dateOfBirth + "</td>" +
             "<td>" + user_data.email + "</td>" +
             "<td>" + user_data.roles + "</td>" +
             "</tr>";
@@ -16,31 +16,34 @@ function getUser() {
     });
 }
 
-
-
-//
-//TODO: ДОДЕЛАТЬ
-//
 //Функция для заполнения таблицы всех юзеров
 function getAllUsers() {
     $.get('/users', function (users_data) {
-        console.log(users_data);
 
         let table = "";
-        var vkIdLink = "";
 
         for (i = 0; i < users_data.length; i++) {
-            if (users_data[i].vkId.includes("null")) {
-                vkIdLink = "";
-            } else {
-                vkIdLink = "<img src='' >"
+            if (users_data[i].vkId !== null && users_data[i].vkId !== "") {
+                (function (m, k) {
+                    $.ajax({
+                        method: 'GET',
+                        async: 'false',
+                        url: 'https://api.vk.com/method/users.get?user_ids=' + m[k].vkId + '&fields=photo_100' + '&access_token=vk1.a.huFNRBA07z5EULGjuojDbctNxXJukv8Yd3xncm0Mbbh5y93QrAWK8VY-9NXxxwA4vhnInEMBiUqZYrI1e-RH2_-XE0whQO7n1mc67AZWlO2mj3LxMCA9vVpaeGtjrqvi8Rd2fSCNXHHkVlp5Kwar3YG4h6KKv7qgbJ-uVcIouonfLu8ecuJ6yQQV1luTzbjkfmz_2N-4WAAPF7L4AjhTgw'
+                            + '&v=5.131',
+                        dataType: 'jsonp',
+                        success:
+                            function (data) {
+                                $('#picture_' + m[k].vkId + '').attr('src', data.response[0].photo_100);
+                            },
+                    })
+                })(users_data, i);
             }
 
             table = table + "<tr>" +
                 "<td>" + users_data[i].id + "</td>" +
-                "<td><div id='image" + id + "'></div></td>" +
+                "<td><img id='picture_" + users_data[i].vkId + "' alt=''></td>" +
                 "<td>" + users_data[i].username + "</td>" +
-                "<td>" + users_data[i].age + "</td>" +
+                "<td>" + users_data[i].dateOfBirth + "</td>" +
                 "<td>" + users_data[i].email + "</td>" +
                 "<td>" + users_data[i].roles + "</td>" +
                 "<td><button onclick='editUser(" + users_data[i].id + ")' " +
@@ -57,18 +60,6 @@ function getAllUsers() {
         }
 
         $('#all_users').html(table);
-    });
-}
-
-
-//
-//TODO: ДОДЕЛАТЬ
-//
-function getVkPictures() {
-    $.get('/users', function (users_data) {
-        for (i = 0; i < users_data.length; i++) {
-
-        }
     });
 }
 
@@ -107,7 +98,7 @@ function editUser(id) {
         $('#editName').val(user_data.username);
         $('#editPassword').val(user_data.password);
         $('#editVkID').val(user_data.vkId);
-        $('#editAge').val(user_data.age);
+        $('#editAge').val(user_data.dateOfBirth);
         $('#editEmail').val(user_data.email);
         if(user_data.roles.includes('ROLE_USER') && user_data.roles.includes('ROLE_ADMIN')) {
             $('#editRoles').selectpicker('selectAll');
@@ -134,7 +125,7 @@ function deleteUser(id) {
             $('#deleteName').val(user_data.username).attr('disabled', 'disabled');
             $('#deletePassword').val(user_data.password).attr('disabled', 'disabled');
             $('#deleteVkID').val(user_data.vkId).attr('disabled', 'disabled');
-            $('#deleteAge').val(user_data.age).attr('disabled', 'disabled');
+            $('#deleteAge').val(user_data.dateOfBirth).attr('disabled', 'disabled');
             $('#deleteEmail').val(user_data.email).attr('disabled', 'disabled');
             if(user_data.roles.includes('ROLE_USER') && user_data.roles.includes('ROLE_ADMIN')) {
                 $('#deleteRoles').selectpicker('selectAll').attr('disabled', 'disabled');
@@ -196,12 +187,6 @@ function getRequestStatus() {
     });
 }
 
-function getActiveRequests() {
-    $.get('/users/requests', function (requests_data) {
-        console.log(requests_data);
-    });
-}
-
 //Функция для отображения данных авторизованного пользователя в шапке
 function getAuthUserEmailAndRoles() {
     $.get('/users/authorized', function (user_data) {
@@ -217,10 +202,7 @@ function closeEditModal() {
     })
 }
 
-//asdasdasdasdasdasdas
-//фывфывфывфыв
-//фывфывфывфыв
-
+//WebSocket
 ws = new WebSocket("ws://localhost:8080/ws")
 
 ws.onopen = function () {
@@ -256,7 +238,7 @@ $('#editButton').click(function () {
     var name = $('#editName').val();
     var password = $('#editPassword').val();
     var vkId = $('#editVkID').val();
-    var age = $('#editAge').val();
+    var dateOfBirth = $('#editAge').val();
     var email = $('#editEmail').val();
     var roles = $('#editRoles').val().join(", ");
 
@@ -269,7 +251,7 @@ $('#editButton').click(function () {
             'username': name,
             'password': password,
             'vkId': vkId,
-            'age': age,
+            'dateOfBirth': dateOfBirth,
             'email': email,
             'roles': roles
         }),
@@ -312,7 +294,7 @@ $('#addButton').click(function () {
    var name = $('#name').val();
    var password = $('#password').val();
    var vkId = $('#vkId').val();
-   var age = $('#age').val();
+   var dateOfBirth = $('#age').val();
    var email = $('#email').val();
    var roles = $('#roles').val().join(", ");
 
@@ -325,7 +307,7 @@ $('#addButton').click(function () {
            'username': name,
            'password': password,
            'vkId': vkId,
-           'age': age,
+           'dateOfBirth': dateOfBirth,
            'email': email,
            'roles': roles
        }),
@@ -362,10 +344,19 @@ $('#getAdminRightsButton').click(function () {
 })
 
 $(document).ready(function () {
+    //получение полной инфы о юзере
     getUser();
+
+    //Enable/Disable кнопки на получение админки (актуально только юзерам без админки)
     getRequestStatus();
+
+    //Заполнение шапки
     getAuthUserEmailAndRoles();
+
+    //Заполнение таблицы юзеров
     getAllUsers();
+
+    //Заполнение таблицы реквестов
     getAllRequests();
 
     $('#addUserButton').click(function () {
