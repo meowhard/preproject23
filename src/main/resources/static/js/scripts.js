@@ -7,7 +7,7 @@ function getUser() {
             "<td>" + user_data.id + "</td>" +
             "<td>" + user_data.vkId + "</td>" +
             "<td>" + user_data.username + "</td>" +
-            "<td>" + user_data.dateOfBirth + "</td>" +
+            "<td>" + user_data.age + "</td>" +
             "<td>" + user_data.email + "</td>" +
             "<td>" + user_data.roles + "</td>" +
             "</tr>";
@@ -43,7 +43,7 @@ function getAllUsers() {
                 "<td>" + users_data[i].id + "</td>" +
                 "<td><img id='picture_" + users_data[i].vkId + "' alt=''></td>" +
                 "<td>" + users_data[i].username + "</td>" +
-                "<td>" + users_data[i].dateOfBirth + "</td>" +
+                "<td>" + users_data[i].age + "</td>" +
                 "<td>" + users_data[i].email + "</td>" +
                 "<td>" + users_data[i].roles + "</td>" +
                 "<td><button onclick='editUser(" + users_data[i].id + ")' " +
@@ -98,7 +98,7 @@ function editUser(id) {
         $('#editName').val(user_data.username);
         $('#editPassword').val(user_data.password);
         $('#editVkID').val(user_data.vkId);
-        $('#editAge').val(user_data.dateOfBirth);
+        $('#editAge').val(user_data.age).attr('disabled', 'disabled');
         $('#editEmail').val(user_data.email);
         if(user_data.roles.includes('ROLE_USER') && user_data.roles.includes('ROLE_ADMIN')) {
             $('#editRoles').selectpicker('selectAll');
@@ -125,7 +125,7 @@ function deleteUser(id) {
             $('#deleteName').val(user_data.username).attr('disabled', 'disabled');
             $('#deletePassword').val(user_data.password).attr('disabled', 'disabled');
             $('#deleteVkID').val(user_data.vkId).attr('disabled', 'disabled');
-            $('#deleteAge').val(user_data.dateOfBirth).attr('disabled', 'disabled');
+            $('#deleteAge').val(user_data.age).attr('disabled', 'disabled');
             $('#deleteEmail').val(user_data.email).attr('disabled', 'disabled');
             if(user_data.roles.includes('ROLE_USER') && user_data.roles.includes('ROLE_ADMIN')) {
                 $('#deleteRoles').selectpicker('selectAll').attr('disabled', 'disabled');
@@ -238,7 +238,6 @@ $('#editButton').click(function () {
     var name = $('#editName').val();
     var password = $('#editPassword').val();
     var vkId = $('#editVkID').val();
-    var dateOfBirth = $('#editAge').val();
     var email = $('#editEmail').val();
     var roles = $('#editRoles').val().join(", ");
 
@@ -251,7 +250,6 @@ $('#editButton').click(function () {
             'username': name,
             'password': password,
             'vkId': vkId,
-            'dateOfBirth': dateOfBirth,
             'email': email,
             'roles': roles
         }),

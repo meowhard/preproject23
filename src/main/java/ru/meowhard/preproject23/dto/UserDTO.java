@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 
 @Data
 @Builder
@@ -22,13 +24,15 @@ public class UserDTO {
 
     private String dateOfBirth;
 
+    private long age;
+
     private String email;
 
     private String roles;
 
     private boolean request;
 
-    public LocalDate getDateOfBirth() {
+    public LocalDate dateOfBirthAsLocalDate() {
         return LocalDate.parse(dateOfBirth);
     }
 }

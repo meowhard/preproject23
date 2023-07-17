@@ -6,6 +6,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,6 +55,10 @@ public class User implements UserDetails {
 
     public String getRolesToString() {
         return this.roles.stream().map(String::valueOf).collect(Collectors.joining(", "));
+    }
+
+    public long calculateAge() {
+        return ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now(ZoneId.systemDefault()));
     }
 
     public boolean getRequest() {

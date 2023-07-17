@@ -48,9 +48,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return true;
     }
 
-    public boolean saveUser(UserDTO userDTO) {
+    public void saveUser(UserDTO userDTO) {
         User user = userMapper.mapToUser(userDTO);
-        return saveUser(user);
+        saveUser(user);
     }
 
     public User getUserById(Long id) {
@@ -65,7 +65,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         existingUser.setUsername(userDTO.getUsername());
         existingUser.setPassword(userDTO.getPassword());
         existingUser.setVkId(userDTO.getVkId());
-        existingUser.setDateOfBirth(userDTO.getDateOfBirth());
         existingUser.setEmail(userDTO.getEmail());
         existingUser.setRoles(userMapper.mapRolesStringToList(userDTO));
         userRepository.save(existingUser);
